@@ -14,7 +14,7 @@ jest.config.js
 
 ```json
 "transform": {
-  "^.+\\.jsx?$": "swc-jest"
+  "^.+\\.jsx?$": "esbuild-jest-transform"
 },
 ```
 
