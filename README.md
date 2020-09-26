@@ -19,7 +19,7 @@ jest.config.js
 ```
 
 ## config
-jest.esbuld.js
+jest.esbuild.js
 ```js
 module.exports = {
   target: 'es2015',
