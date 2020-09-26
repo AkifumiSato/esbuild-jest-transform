@@ -1,5 +1,4 @@
 # esbuild-jest-transform
-[![npm](https://img.shields.io/npm/v/esbuild-jest.svg)](https://www.npmjs.com/package/esbuild-jest)
 esbuild jest plugin.
 You can set the build option of esbuild by putting jest.esbuild.js.
 
