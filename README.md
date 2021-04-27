@@ -1,4 +1,6 @@
 # esbuild-jest-transform
+[![npm version](https://badge.fury.io/js/esbuild-jest-transform.svg)](https://badge.fury.io/js/esbuild-jest-transform)
+
 esbuild jest plugin.
 You can set the build option of esbuild by putting jest.esbuild.js.
 
@@ -6,7 +8,7 @@ You can set the build option of esbuild by putting jest.esbuild.js.
 
 ## Install
 ```bash
-npm install -D esbuild-jest-transform
+npm install -D esbuild esbuild-jest-transform
 ```
 
 ## Setup
