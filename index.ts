@@ -1,12 +1,10 @@
 import * as path from "path";
-import * as fs from "fs";
+
 import * as esbuild from "esbuild";
 import { builtinModules } from "module";
 import { OutputFile } from "esbuild";
 
 const pkg = require(path.resolve("package.json"));
-const configFilePath = path.resolve("jest.esbuild");
-const config = fs.existsSync(configFilePath) ? require(configFilePath) : {};
 
 const external = [
   ...builtinModules,
@@ -20,15 +18,20 @@ type BuildOutput = {
   code?: string;
 };
 
+// Very partial type - should maybe use the actual TransformOptions type export from Jest's definitions
+type TransformOptions = {
+  transformerConfig: {}
+}
+
 module.exports = {
-  process(_content: string, filename: string): BuildOutput {
+  process(_content: string, filename: string, { transformerConfig }: TransformOptions ): BuildOutput {
     const { outputFiles } = esbuild.buildSync({
       outdir: "./dist",
       minify: false,
       bundle: true,
       write: false,
       sourcemap: true,
-      ...config,
+      ...transformerConfig,
       entryPoints: [filename],
       external,
     });
