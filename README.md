@@ -2,7 +2,7 @@
 [![npm version](https://badge.fury.io/js/esbuild-jest-transform.svg)](https://badge.fury.io/js/esbuild-jest-transform)
 
 esbuild jest plugin.
-You can set the build option of esbuild by putting jest.esbuild.js.
+You can set the build options of esbuild by passing them as transform options.
 
 [esbuild config](https://github.com/evanw/esbuild/blob/v0.7.6/lib/types.ts)
 
@@ -21,10 +21,17 @@ jest.config.js
 ```
 
 ## config
-jest.esbuild.js
-```js
-module.exports = {
-  target: 'es2015',
-}
+jest.config.js
+
+```json
+"transform": {
+  "^.+\\.jsx?$": [
+    "esbuild-jest-transform",
+    {
+      "target": "es2015",
+    }
+  ]
+},
 ```
+
 
