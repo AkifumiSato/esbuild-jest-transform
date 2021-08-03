@@ -1,12 +1,10 @@
 import * as path from "path";
-import * as fs from "fs";
+
 import * as esbuild from "esbuild";
 import { builtinModules } from "module";
-import { OutputFile } from "esbuild";
+import type { SyncTransformer, TransformedSource } from "@jest/transform";
 
 const pkg = require(path.resolve("package.json"));
-const configFilePath = path.resolve("jest.esbuild");
-const config = fs.existsSync(configFilePath) ? require(configFilePath) : {};
 
 const external = [
   ...builtinModules,
@@ -15,28 +13,25 @@ const external = [
   ...Object.keys(pkg.peerDependencies ?? {}),
 ];
 
-type BuildOutput = {
-  map?: string;
-  code?: string;
-};
-
-module.exports = {
-  process(_content: string, filename: string): BuildOutput {
+const transformer: SyncTransformer<esbuild.BuildOptions> = {
+  process(_content, filename, { transformerConfig }) {
     const { outputFiles } = esbuild.buildSync({
       outdir: "./dist",
       minify: false,
       bundle: true,
       write: false,
       sourcemap: true,
-      ...config,
+      ...transformerConfig,
       entryPoints: [filename],
       external,
     });
 
-    return outputFiles?.reduce((cur: BuildOutput, item: OutputFile) => {
+    return outputFiles!.reduce((cur, item) => {
       const key = item.path.includes(".map") ? "map" : "code";
       cur[key] = Buffer.from(item.contents).toString();
       return cur;
-    }, {}) ?? {};
+    }, {} as Exclude<TransformedSource, string>);
   },
 };
+
+module.exports = transformer;
