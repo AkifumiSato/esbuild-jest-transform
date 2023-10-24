@@ -18,6 +18,7 @@ const transformer: SyncTransformer<esbuild.BuildOptions> = {
     const { outputFiles } = esbuild.buildSync({
       outdir: "./dist",
       minify: false,
+      target: "esnext",
       bundle: true,
       write: false,
       sourcemap: true,
