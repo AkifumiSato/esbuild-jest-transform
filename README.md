@@ -16,7 +16,7 @@ jest.config.js
 
 ```json
 "transform": {
-  "^.+\\.jsx?$": "esbuild-jest-transform"
+  "^.+\\.[jt]sx?$": "esbuild-jest-transform"
 },
 ```
 
@@ -25,7 +25,7 @@ jest.config.js
 
 ```json
 "transform": {
-  "^.+\\.jsx?$": [
+  "^.+\\.[jt]sx?$": [
     "esbuild-jest-transform",
     {
       "target": "es2015",
