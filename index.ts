@@ -1,37 +1,37 @@
 import * as path from "path";
 
 import * as esbuild from "esbuild";
-import { builtinModules } from "module";
-import type { SyncTransformer, TransformedSource } from "@jest/transform";
+import type { SyncTransformer } from "@jest/transform";
 
-const pkg = require(path.resolve("package.json"));
+const loaderFromFilename = (filename: string): esbuild.Loader => {
+  const ext = path.extname(filename)?.toLowerCase().substring(1) ?? "";
+  switch (ext) {
+    case "js":
+    case "jsx":
+    case "ts":
+    case "tsx":
+    case "json":
+      return ext;
+    default:
+      return "text";
+  }
+}
 
-const external = [
-  ...builtinModules,
-  ...Object.keys(pkg.dependencies ?? {}),
-  ...Object.keys(pkg.devDependencies ?? {}),
-  ...Object.keys(pkg.peerDependencies ?? {}),
-];
-
-const transformer: SyncTransformer<esbuild.BuildOptions> = {
-  process(_content, filename, { transformerConfig }) {
-    const { outputFiles } = esbuild.buildSync({
-      outdir: "./dist",
+const transformer: SyncTransformer<esbuild.TransformOptions> = {
+  process(content, sourcefile, { transformerConfig }) {
+    const loader = loaderFromFilename(sourcefile);
+    const { code, map } = esbuild.transformSync(content, {
+      loader,
+      format: "cjs",
       minify: false,
       target: "esnext",
-      bundle: true,
-      write: false,
-      sourcemap: true,
+      sourcemap: "inline",
+      sourcefile,
+      sourcesContent: true,
       ...transformerConfig,
-      entryPoints: [filename],
-      external,
     });
 
-    return outputFiles!.reduce((cur, item) => {
-      const key = item.path.includes(".map") ? "map" : "code";
-      cur[key] = Buffer.from(item.contents).toString();
-      return cur;
-    }, {} as Exclude<TransformedSource, string>);
+    return { code, map };
   },
 };
 
